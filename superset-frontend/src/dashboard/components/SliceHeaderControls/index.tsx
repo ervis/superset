@@ -64,6 +64,7 @@ const MENU_KEYS = {
   DOWNLOAD_AS_IMAGE: 'download_as_image',
   EXPLORE_CHART: 'explore_chart',
   EXPORT_CSV: 'export_csv',
+  EXPORT_PDF: 'export_pdf',
   EXPORT_FULL_CSV: 'export_full_csv',
   EXPORT_XLSX: 'export_xlsx',
   EXPORT_FULL_XLSX: 'export_full_xlsx',
@@ -146,6 +147,7 @@ export interface SliceHeaderControlsProps {
   logEvent?: (eventName: string, eventData?: object) => void;
   toggleExpandSlice?: (sliceId: number) => void;
   exportCSV?: (sliceId: number) => void;
+  exportPDF?: (sliceId: number) => void;
   exportFullCSV?: (sliceId: number) => void;
   exportXLSX?: (sliceId: number) => void;
   exportFullXLSX?: (sliceId: number) => void;
@@ -309,6 +311,10 @@ const SliceHeaderControls = (props: SliceHeaderControlsPropsWithRouter) => {
       case MENU_KEYS.EXPORT_CSV:
         // eslint-disable-next-line no-unused-expressions
         props.exportCSV?.(props.slice.slice_id);
+        break;
+      case MENU_KEYS.EXPORT_PDF:
+        // eslint-disable-next-line no-unused-expressions
+        props.exportPDF?.(props.slice.slice_id);
         break;
       case MENU_KEYS.FULLSCREEN:
         props.handleToggleFullSize();
@@ -518,6 +524,12 @@ const SliceHeaderControls = (props: SliceHeaderControlsPropsWithRouter) => {
             icon={<Icons.FileOutlined css={dropdownIconsStyles} />}
           >
             {t('Export to .CSV')}
+          </Menu.Item>
+          <Menu.Item
+            key={MENU_KEYS.EXPORT_PDF}
+            icon={<Icons.FileOutlined css={dropdownIconsStyles} />}
+          >
+            {t('Export to PDF')}
           </Menu.Item>
           <Menu.Item
             key={MENU_KEYS.EXPORT_XLSX}

@@ -137,6 +137,7 @@ const SliceHeader: FC<SliceHeaderProps> = ({
   logExploreChart = () => ({}),
   logEvent,
   exportCSV = () => ({}),
+  exportPDF = () => ({}),
   exportXLSX = () => ({}),
   editMode = false,
   annotationQuery = {},
@@ -273,6 +274,7 @@ const SliceHeader: FC<SliceHeaderProps> = ({
                 logExploreChart={logExploreChart}
                 logEvent={logEvent}
                 exportCSV={exportCSV}
+                exportPDF={exportPDF}
                 exportFullCSV={exportFullCSV}
                 exportXLSX={exportXLSX}
                 exportFullXLSX={exportFullXLSX}

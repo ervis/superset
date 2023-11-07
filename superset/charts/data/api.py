@@ -405,6 +405,16 @@ class ChartDataRestApi(ChartRestApi):
             resp.headers["Content-Type"] = "application/json; charset=utf-8"
             return resp
 
+        if result_format == ChartDataResultFormat.PDF:
+            create
+            response_data = simplejson.dumps(
+                {"result": result["queries"]},
+                default=json_int_dttm_ser,
+                ignore_nan=True,
+            )
+            resp = make_response(response_data, 200)
+            resp.headers["Content-Type"] = "application/pdf; charset=utf-8"
+            return resp
         return self.response_400(message=f"Unsupported result_format: {result_format}")
 
     def _get_data_response(
