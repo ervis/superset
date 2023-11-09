@@ -104,6 +104,11 @@ from superset.utils.date_parser import parse_human_timedelta
 from superset.utils.dates import datetime_to_epoch, EPOCH
 from superset.utils.hashing import md5_sha_from_dict, md5_sha_from_str
 
+from io import BytesIO
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
+from reportlab.lib import colors
+
 if TYPE_CHECKING:
     from superset.connectors.sqla.models import BaseDatasource, TableColumn
     from superset.models.sql_lab import Query
@@ -1832,6 +1837,38 @@ def apply_max_row_limit(
     if limit != 0:
         return min(max_limit, limit)
     return max_limit
+
+
+def create_pdf(data) -> BytesIO:
+    # Create a BytesIO object to hold the PDF content
+    pdf_buffer = BytesIO()
+
+    # Create a PDF document
+    doc = SimpleDocTemplate(pdf_buffer, pagesize=letter)
+
+    # Create a table from the list of dictionaries
+    table_data = [list(data[0].keys())]  # Header row
+    for item in data:
+        table_data.append(list(item.values()))
+
+    table = Table(table_data)
+    table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black)
+    ]))
+
+    # Build the PDF document
+    doc.build([table])
+
+    # Reset the BytesIO buffer to the beginning
+    pdf_buffer.seek(0)
+
+    return pdf_buffer
 
 
 def create_zip(files: dict[str, Any]) -> BytesIO:

@@ -14,34 +14,10 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-from superset.utils.backports import StrEnum
+from typing import Any
+
+import pandas as pd
 
 
-class ChartDataResultFormat(StrEnum):
-    """
-    Chart data response format
-    """
-
-    CSV = "csv"
-    PDF = "pdf"
-    JSON = "json"
-    XLSX = "xlsx"
-
-    @classmethod
-    def table_like(cls) -> set["ChartDataResultFormat"]:
-        return {cls.CSV} | {cls.XLSX}
-
-
-class ChartDataResultType(StrEnum):
-    """
-    Chart data response type
-    """
-
-    COLUMNS = "columns"
-    FULL = "full"
-    QUERY = "query"
-    RESULTS = "results"
-    SAMPLES = "samples"
-    TIMEGRAINS = "timegrains"
-    POST_PROCESSED = "post_processed"
-    DRILL_DETAIL = "drill_detail"
+def df_to_pdf(df: pd.DataFrame, **kwargs: Any) -> Any:
+    return None

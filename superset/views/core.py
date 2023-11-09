@@ -92,6 +92,7 @@ from superset.views.base import (
     handle_api_exception,
     json_error_response,
     json_success,
+    PdfResponse,
 )
 from superset.views.utils import (
     bootstrap_user_data,
@@ -184,6 +185,10 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
         if response_type == ChartDataResultFormat.CSV:
             return CsvResponse(
                 viz_obj.get_csv(), headers=generate_download_headers("csv")
+            )
+        if response_type == ChartDataResultFormat.PDF:
+            return PdfResponse(
+                viz_obj.get_pdf(), headers=generate_download_headers("pdf")
             )
 
         if response_type == ChartDataResultType.QUERY:

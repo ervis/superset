@@ -390,6 +390,7 @@ zipp==3.15.0
     # via
     #   importlib-metadata
     #   importlib-resources
-
+reportlab===4.0.7
+    # via apache-superset
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools

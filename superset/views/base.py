@@ -685,6 +685,15 @@ class CsvResponse(Response):
     default_mimetype = "text/csv"
 
 
+class PdfResponse(Response):
+    """
+    Override Response to use pdf mimetype
+    """
+
+    charset = "utf-8"
+    default_mimetype = "text/pdf"
+
+
 class XlsxResponse(Response):
     """
     Override Response to use xlsx mimetype
