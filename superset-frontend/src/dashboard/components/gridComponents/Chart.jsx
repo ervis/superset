@@ -29,6 +29,7 @@ import {
   LOG_ACTIONS_CHANGE_DASHBOARD_FILTER,
   LOG_ACTIONS_EXPLORE_DASHBOARD_CHART,
   LOG_ACTIONS_EXPORT_CSV_DASHBOARD_CHART,
+  LOG_ACTIONS_EXPORT_PDF_DASHBOARD_CHART,
   LOG_ACTIONS_EXPORT_XLSX_DASHBOARD_CHART,
   LOG_ACTIONS_FORCE_REFRESH_CHART,
 } from 'src/logger/LogUtils';
@@ -138,6 +139,7 @@ class Chart extends React.Component {
     this.handleFilterMenuOpen = this.handleFilterMenuOpen.bind(this);
     this.handleFilterMenuClose = this.handleFilterMenuClose.bind(this);
     this.exportCSV = this.exportCSV.bind(this);
+    this.exportPDF = this.exportPDF.bind(this);
     this.exportFullCSV = this.exportFullCSV.bind(this);
     this.exportXLSX = this.exportXLSX.bind(this);
     this.exportFullXLSX = this.exportFullXLSX.bind(this);
@@ -332,6 +334,10 @@ class Chart extends React.Component {
     this.exportTable('csv', isFullCSV);
   }
 
+  exportPDF() {
+    this.exportTable('pdf', false);
+  }
+
   exportXLSX() {
     this.exportTable('xlsx', false);
   }
@@ -340,11 +346,17 @@ class Chart extends React.Component {
     this.exportTable('xlsx', true);
   }
 
+  calculateLogAction(format) {
+    if (format === 'csv') {
+      return LOG_ACTIONS_EXPORT_CSV_DASHBOARD_CHART;
+    } else if (format === 'xlsx') {
+      return LOG_ACTIONS_EXPORT_XLSX_DASHBOARD_CHART;
+    }
+    return LOG_ACTIONS_EXPORT_PDF_DASHBOARD_CHART;
+  }
+
   exportTable(format, isFullCSV) {
-    const logAction =
-      format === 'csv'
-        ? LOG_ACTIONS_EXPORT_CSV_DASHBOARD_CHART
-        : LOG_ACTIONS_EXPORT_XLSX_DASHBOARD_CHART;
+    const logAction = this.calculateLogAction(format);
     this.props.logEvent(logAction, {
       slice_id: this.props.slice.slice_id,
       is_cached: this.props.isCached,
@@ -453,6 +465,7 @@ class Chart extends React.Component {
           onExploreChart={this.onExploreChart}
           exportCSV={this.exportCSV}
           exportXLSX={this.exportXLSX}
+          exportPDF={this.exportPDF}
           exportFullCSV={this.exportFullCSV}
           exportFullXLSX={this.exportFullXLSX}
           updateSliceName={updateSliceName}

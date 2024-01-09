@@ -47,8 +47,8 @@ from superset.daos.exceptions import DatasourceNotFound
 from superset.exceptions import QueryObjectValidationError
 from superset.extensions import event_logger
 from superset.models.sql_lab import Query
-from superset.utils.core import create_zip, get_user_id, json_int_dttm_ser
-from superset.views.base import CsvResponse, generate_download_headers, XlsxResponse
+from superset.utils.core import create_zip, get_user_id, json_int_dttm_ser, create_pdf
+from superset.views.base import CsvResponse, generate_download_headers, XlsxResponse, PdfResponse
 from superset.views.base_api import statsd_metrics
 
 if TYPE_CHECKING:
@@ -363,12 +363,15 @@ class ChartDataRestApi(ChartRestApi):
                 return self.response_400(_("Empty query result"))
 
             is_csv_format = result_format == ChartDataResultFormat.CSV
+            is_pdf_format = result_format == ChartDataResultFormat.PDF
 
             if len(result["queries"]) == 1:
                 # return single query results
                 data = result["queries"][0]["data"]
                 if is_csv_format:
                     return CsvResponse(data, headers=generate_download_headers("csv"))
+                elif is_pdf_format:
+                    return PdfResponse(data, headers=generate_download_headers("csv"))
 
                 return XlsxResponse(data, headers=generate_download_headers("xlsx"))
 
@@ -398,6 +401,14 @@ class ChartDataRestApi(ChartRestApi):
             resp = make_response(response_data, 200)
             resp.headers["Content-Type"] = "application/json; charset=utf-8"
             return resp
+
+        if result_format == ChartDataResultFormat.PDF:
+            data = result["queries"][0]["data"]
+            return Response(
+                create_pdf(data),
+                headers=generate_download_headers("pdf"),
+                mimetype="application/pdf",
+            )
 
         return self.response_400(message=f"Unsupported result_format: {result_format}")
 
